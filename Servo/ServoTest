@@ -1,0 +1,63 @@
+#include <Servo.h>
+
+Servo vasakServo;
+Servo paremServo;
+
+int vasakServoPin(7);
+int paremServoPin(4);
+
+unsigned long servoTimer = 0;
+unsigned long servoInterval = 90;
+
+int nurk = 90;
+int eelmineNurk = 90;
+
+int aste = 20;
+bool asend = true;
+
+
+
+void setup() {
+  Serial.begin(9600);
+  vasakServo.attach(vasakServoPin);
+  paremServo.attach(paremServoPin);
+}
+
+void loop(){
+  // saab kasutada liigutaServo(vasakServo, arvväärtus 0 kuni 180);
+  unsigned long praeguneTimer = millis();
+  
+  if(praeguneTimer-servoTimer >= servoInterval){
+    //liigutaServo(vasakServo, nurk);
+    //liigutaServo(paremServo, nurk);
+    testServo(vasakServo);
+    testServo(paremServo);
+    //Serial.println("Liikus");
+    servoTimer = praeguneTimer;
+  }
+  
+}
+
+void testServo(Servo kumb){
+  if(nurk>=180){
+    asend = false;
+    Serial.println("yle 180");
+    nurk = 180;
+  }else if(nurk<=90){
+    nurk = 90;
+    Serial.println("alla 90");
+    asend = true;
+  }
+  kumb.write(nurk);
+  nurgaMuutuja();
+  Serial.println(nurk);
+}
+
+void nurgaMuutuja(){
+  Serial.println(asend);
+  if(asend == 1){
+    nurk += 2;
+  }else if (asend == 0){
+    nurk -= 2;
+  }
+}

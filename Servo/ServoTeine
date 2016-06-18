@@ -1,0 +1,26 @@
+#include <Servo.h>
+
+Servo vasakServo;
+Servo paremServo;
+
+int vasakServoPin(0);
+int paremServoPin(4);
+
+
+
+void setup() {
+  Serial.begin(9600);
+  vasakServo.attach(vasakServoPin);
+  paremServo.attach(paremServoPin);
+}
+
+void loop(){
+  // saab kasutada liigutaServo(vasakServo, 90 kuni 180;
+}
+
+void liigutaServo(kumb, kuhu){
+  if(kuhu >= 90){
+    kuhu = 90;  
+  }
+  kumb.write(kuhu);
+}

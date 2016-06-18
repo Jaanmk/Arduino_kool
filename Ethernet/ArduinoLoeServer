@@ -1,0 +1,134 @@
+#include <SPI.h>
+#include <EthernetV2_0.h>
+//********************************************************************
+/*
+*****************************************************************
+Muutujad ajale siia alla paluks
+*****************************************************************
+*/
+unsigned long etherLugeja = 0;
+unsigned long etherInterval = 2000;
+
+unsigned long serverlugeja = 0;
+unsigned long serverInterval = 1000;
+int yhenduseKaunter = 0;
+
+
+/*
+*****************************************************************
+Serverimuutujad
+*****************************************************************
+*/
+byte mac[] = { 0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02 };
+EthernetClient client;
+char serverName[] = "ole.multirootor.eu";
+#define W5200_CS  10
+#define SDCARD_CS 4
+
+String vanaServerist = "";
+String uusServerist = "";
+
+bool netiYhendus = false;
+
+//********************************** VOID SETUP
+void setup() {
+  Serial.begin(9600);
+  pinMode(SDCARD_CS,OUTPUT);
+  digitalWrite(SDCARD_CS,HIGH);
+  looYhendus();
+}
+//********************************** VOID LOOP
+void loop() {
+  unsigned long currentMillis = millis();
+ if(currentMillis - etherLugeja >= etherInterval){
+    kontrolliYhendus();
+  }
+
+  
+    
+}
+  
+//********************************** STRING LOESERVER
+String loeServer(String aadress){
+  Serial.println("loeveebileht");
+  if(client.connect(serverName, 80)){
+    client.print("GET /");
+    client.print(aadress); 
+    client.println(" HTTP/1.1");
+    client.println("Host: ole.multirootor.eu");
+    client.println("User-Agent: arduino-ethernet");
+    client.println("Connection: close");
+    client.println();
+    bool reader = false;
+    String input;
+    int i = 0;
+    // if there are incoming bytes available 
+    // from the server, read them and print them:
+    bool reader2 = true;
+   
+   while(reader2 == true) {
+      char c;
+      c = client.read();
+      //Serial.println(c);
+      if(c == '<'){
+        reader = true;
+         }else if(c == '>'){
+        reader = false;
+        reader2 = false;
+
+      }else if(reader){
+        input += c; 
+      }
+    }
+
+   //Serial.println(input);
+   //Serial.println("korras");
+    client.stop();
+    client.flush();
+    return input;
+
+    }else{
+      netiYhendus = false;
+    }
+}
+
+
+//********************************** LOOYHENDUS
+void looYhendus(){
+  int i = 0;
+  while(netiYhendus == false || i<5){
+    bool yhendus = Ethernet.begin(mac);
+    if(yhendus == true){
+       netiYhendus = true;
+      yhenduseKaunter++;
+      break;
+    }else{
+      netiYhendus = false;
+    }
+   delay(500);
+    i++;
+  }
+  if(netiYhendus == true){
+    Serial.print("My IP address: ");
+    for (byte thisByte = 0; thisByte < 4; thisByte++) {
+      // print the value of each byte of the IP address:
+      Serial.print(Ethernet.localIP()[thisByte], DEC);
+      Serial.print("."); 
+    }
+  Serial.print("Loodud yhendus number: ");
+  Serial.println(yhenduseKaunter);
+  }
+   
+}
+  
+  
+//********************************** KONTROLLIYHENDUS
+void kontrolliYhendus(){
+  if(netiYhendus == true){
+    netiYhendus = true;
+    Serial.println("Nett peaks olemas olema");
+  }else{
+    netiYhendus = false;
+    looYhendus();
+  }
+}

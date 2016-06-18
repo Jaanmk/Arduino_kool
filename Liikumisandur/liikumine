@@ -1,0 +1,71 @@
+// these constants won't change:
+const int  pir1Pin = 1;    // the pin that the movement sensor 1 is attached to
+const int  pir2Pin = 2;    // the pin that the movement sensor 2 is attached to
+
+// Variables that will change:
+int pir1State = 0;
+int pir2State = 0;
+int lastStatee = 0;
+void setup() {
+  // initialize the button pin as a input:
+  pinMode(pir1Pin, INPUT);
+  // pinMode(pir2Pin, INPUT);
+  // initialize serial communication:
+  Serial.begin(9600);
+}
+
+/**** Ainult üks liikumis andur ****/
+void loop() {
+  // read the movement sensor input pin:
+  int pirState = digitalRead(pir1Pin);
+  
+  // compare the movement sensor current state to its previous state
+  if (pirState != lastButtonState) {
+  
+    if (buttonState == HIGH) {
+      // if the current state is HIGH then the button
+      // went from off to on:
+      Serial.println("Pir1 on");
+    } else {
+      // if the current state is LOW then the button
+      // wend from on to off:
+      Serial.println("Pir1 off");
+    }
+  }
+  
+  // save the current state as the last state,
+  //for next time through the loop
+  int lastButtonState = buttonState;
+}
+
+
+
+/**** Kaks liikumis andurit korraga ****/
+/*
+void loop() {
+  int pir1State = Movement(pir1Pin, pir1State);
+  int pir2State = Movement(pir2Pin, pir2State);
+}
+
+int Movement(int pin, int lastState){
+  // read the movement sensor input pin:
+  int buttonState = digitalRead(pin);
+  // compare the movement sensor to its previous state
+  if (buttonState != lastState) {
+    if (buttonState == HIGH) {
+      // if the current state is HIGH then the button
+      // went from off to on:
+      Serial.println("Pir" +pin+ on");
+    } else {
+      // if the current state is LOW then the button
+      // wend from on to off:
+      Serial.println("Pir "+pin+" off");
+    }
+  }
+  return buttonState;
+}
+*/
+
+
+
+

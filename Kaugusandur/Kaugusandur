@@ -1,0 +1,46 @@
+#include <NewPing.h>
+
+#define TRIGGER_PIN  A0
+#define ECHO_PIN     A1
+#define MAX_DISTANCE 200
+#define TRIGGER_PIN2  7
+#define ECHO_PIN2     6
+NewPing kaugusAndurVasak(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+NewPing kaugusAndurParem(TRIGGER_PIN2, ECHO_PIN2, MAX_DISTANCE);
+
+unsigned long kauguseTimer = 0;
+
+long kaugusVasak = 0;
+long kaugusParem = 0;
+
+void setup() {
+  Serial.begin (9600);
+
+}
+
+void loop(){
+  unsigned long praeguneTimer = millis();
+  if(praeguneTimer-kauguseTimer >= 500){
+    kauguseLugemine(kaugusAndurVasak, 1);
+    kauguseLugemine(kaugusAndurParem, 2);
+    Serial.println(kaugusVasak);
+    Serial.println(kaugusParem);
+    kauguseTimer = praeguneTimer;
+    
+  }
+}
+
+void kauguseLugemine(NewPing kumb, int number){
+  
+  int mikrosekund = kumb.ping();
+   //Serial.println(mikrosekund);
+  if(number == 2){
+    kaugusParem = kumb.convert_cm(mikrosekund);
+  }else if(number == 1){
+    kaugusVasak = kumb.convert_cm(mikrosekund);
+  }
+}
+/*
+convert_cm(int mikrosekund){
+  return mikrosekund = mikrosekund / 29 / 2;
+}*/

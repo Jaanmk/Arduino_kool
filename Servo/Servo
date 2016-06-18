@@ -1,0 +1,53 @@
+#include <Servo.h>
+
+Servo vasakServo;
+Servo paremServo;
+
+int vasakPin(0);
+int paremPin(4);
+int i = 18;
+int k = 18;
+
+void setup() {
+  Serial.begin(9600);
+  vasakServo.attach(vasakPin);
+  paremServo.attach(paremPin);
+}
+
+void loop() {
+  vasakYlesse(vasakServo);
+  paremYlesse(paremServo);
+  vasakAlla(vasakServo);
+  paremAlla(paremServo);
+  delay(1000);
+}
+
+void vasakYlesse(Servo servo){
+  for(; i < 36; i++){
+    delay(15);
+    servo.write((i*5));
+    delay(15);
+  }
+}
+void vasakAlla(Servo servo){
+  for(; i > 17; i--){
+    delay(15);
+    servo.write((i*5));
+    delay(15);
+  }
+}
+void paremYlesse(Servo servo){
+  
+  for(; k < 36; k++){
+    delay(15);
+    servo.write((k*5));
+    delay(15);
+  }
+}
+void paremAlla(Servo servo){
+  for(; k > 17; k--){
+    delay(15);
+    servo.write((k*5));
+    delay(15);
+  }
+}
